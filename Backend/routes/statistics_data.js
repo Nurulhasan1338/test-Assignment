@@ -70,7 +70,7 @@ try {
 });
 
 
-router.get("/bardata", async (req, res) => {
+router.post("/bardata", async (req, res) => {
   try {
   
     const requestedMonth = Number(req.body.month);

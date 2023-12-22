@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require('mongoose');
 const Transations = require("../module/transactions")
+const pageSize = 10;
 
 
 
@@ -22,23 +23,16 @@ try {
 });
 
 
-
-router.get("/search", async (req, res) => {
+router.post("/search", async (req, res) => {
 try {
   
   const transaction_data = await Transations.find();
-  const parameter = req.body.parameter;
-  const value = req.body.value;
+ 
   const page = Number(req.body.page);
+  const Month = Number(req.body.month)
 
-  result = transaction_data;
-
-  if(parameter){
-    result = await Transations.find({ [parameter]: value })
-    res.json(result);
-  }else{
-
-  const pageSize = 10;
+  result = await Transations.find({ month: Month })
+ 
   const startIndex = (page - 1)* pageSize;
   const endIndex = startIndex + pageSize;
   const paginatedData = result.slice(startIndex, endIndex);
@@ -46,12 +40,12 @@ try {
     res.json({
       data: paginatedData,
       currentPage: page,
-      totalPages: Math.ceil(transaction_data.length / pageSize),
+      totalPages: Math.ceil(transaction_data.length/pageSize),
       perPage: pageSize,
     });
   
  
-  }
+  
 
 }  catch (error) {
     console.error(error);
